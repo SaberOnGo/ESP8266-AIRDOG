@@ -1,0 +1,5 @@
+---- SIG_UPGRADE_DATA Matches (4 in 3 files) ----
+Gizwits_product.c (app\gizwits):    system_os_post(USER_TASK_PRIO_2, SIG_UPGRADE_DATA, 0);
+Gizwits_product.c (app\gizwits):    system_os_post(USER_TASK_PRIO_2, SIG_UPGRADE_DATA, 0);
+Gizwits_protocol.c (app\gizwits):    case SIG_UPGRADE_DATA:
+Gizwits_protocol.h (app\gizwits):#define SIG_UPGRADE_DATA              0x04

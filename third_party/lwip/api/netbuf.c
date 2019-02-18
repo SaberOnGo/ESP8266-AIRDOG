@@ -48,7 +48,7 @@
 /**
  * Create (allocate) and initialize a new netbuf.
  * The netbuf doesn't yet contain a packet buffer!
- * ç”³è¯·ä¸€ä¸ªæ–°çš„netbufç©ºé—´ï¼Œä½†ä¸åˆ†é…ä»»ä½•æ•°æ®ç©ºé—´
+ * ÉêÇëÒ»¸öĞÂµÄnetbuf¿Õ¼ä£¬µ«²»·ÖÅäÈÎºÎÊı¾İ¿Õ¼ä
  * @return a pointer to a new netbuf
  *         NULL on lack of memory
  */
@@ -80,7 +80,7 @@ netbuf *netbuf_new(void)
 
 /**
  * Deallocate a netbuf allocated by netbuf_new().
- * é‡Šæ”¾ä¸€ä¸ªnetbufç©ºé—´
+ * ÊÍ·ÅÒ»¸önetbuf¿Õ¼ä
  * @param buf pointer to a netbuf allocated by netbuf_new()
  */
 void
@@ -97,7 +97,7 @@ netbuf_delete(struct netbuf *buf)
 
 /**
  * Allocate memory for a packet buffer for a given netbuf.
- *ä¸ºnetbufç»“æ„åˆ†é…sizeå¤§å°çš„æ•°æ®ç©ºé—´
+ *Îªnetbuf½á¹¹·ÖÅäsize´óĞ¡µÄÊı¾İ¿Õ¼ä
  * @param buf the netbuf for which to allocate a packet buffer
  * @param size the size of the packet buffer to allocate
  * @return pointer to the allocated memory
@@ -124,7 +124,7 @@ netbuf_alloc(struct netbuf *buf, u16_t size)
 
 /**
  * Free the packet buffer included in a netbuf
- *é‡Šæ”¾netbufç»“æ„æŒ‡å‘çš„æ•°æ®pbuf
+ *ÊÍ·Ånetbuf½á¹¹Ö¸ÏòµÄÊı¾İpbuf
  * @param buf pointer to the netbuf which contains the packet buffer to free
  */
 void

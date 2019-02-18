@@ -310,44 +310,44 @@ icmp_send_response(struct pbuf *p, u8_t type, u8_t code)
   ip_addr_t iphdr_src;
 
   /* ICMP header + IP header + 8 bytes of data */
-  //ä¸ºå·®é”™æŠ¥æ–‡ç”³è¯·pbufç©ºé—´ï¼Œpbufä¸­é¢„ç•™IPé¦–éƒ¨å’Œä»¥å¤ªç½‘é¦–éƒ¨ç©ºé—´ï¼Œpbufæ•°æ®åŒº
-  //é•¿åº¦=å·®é”™æŠ¥æ–‡é¦–éƒ¨+å·®é”™æŠ¥æ–‡æ•°æ®é•¿åº¦(IPé¦–éƒ¨é•¿åº¦+8)
+  //Îª²î´í±¨ÎÄÉêÇëpbuf¿Õ¼ä£¬pbufÖÐÔ¤ÁôIPÊ×²¿ºÍÒÔÌ«ÍøÊ×²¿¿Õ¼ä£¬pbufÊý¾ÝÇø
+  //³¤¶È=²î´í±¨ÎÄÊ×²¿+²î´í±¨ÎÄÊý¾Ý³¤¶È(IPÊ×²¿³¤¶È+8)
   q = pbuf_alloc(PBUF_IP, sizeof(struct icmp_echo_hdr) + IP_HLEN + ICMP_DEST_UNREACH_DATASIZE,
                  PBUF_RAM);
-  if (q == NULL) {//å¤±è´¥ï¼Œè¿”å›ž
+  if (q == NULL) {//Ê§°Ü£¬·µ»Ø
     LWIP_DEBUGF(ICMP_DEBUG, ("icmp_time_exceeded: failed to allocate pbuf for ICMP packet.\n"));
     return;
   }
   LWIP_ASSERT("check that first pbuf can hold icmp message",
              (q->len >= (sizeof(struct icmp_echo_hdr) + IP_HLEN + ICMP_DEST_UNREACH_DATASIZE)));
 
-  iphdr = (struct ip_hdr *)p->payload;//æŒ‡å‘å¼•èµ·å·®é”™çš„IPæ•°æ®åŒ…é¦–éƒ¨
+  iphdr = (struct ip_hdr *)p->payload;//Ö¸ÏòÒýÆð²î´íµÄIPÊý¾Ý°üÊ×²¿
   LWIP_DEBUGF(ICMP_DEBUG, ("icmp_time_exceeded from "));
   ip_addr_debug_print(ICMP_DEBUG, &(iphdr->src));
   LWIP_DEBUGF(ICMP_DEBUG, (" to "));
   ip_addr_debug_print(ICMP_DEBUG, &(iphdr->dest));
   LWIP_DEBUGF(ICMP_DEBUG, ("\n"));
 
-  icmphdr = (struct icmp_echo_hdr *)q->payload;//æŒ‡å‘å·®é”™æŠ¥æ–‡é¦–éƒ¨
-  icmphdr->type = type;//å¡«å†™ç±»åž‹å­—æ®µ
-  icmphdr->code = code;//å¡«å†™ä»£ç å­—æ®µ
-  icmphdr->id = 0;//å¯¹äºŽç›®çš„ä¸å¯è¾¾å’Œæ•°æ®æŠ¥è¶…æ—¶
-  icmphdr->seqno = 0;//æŠ¥æ–‡ï¼Œé¦–éƒ¨å‰©ä½™çš„4ä¸ªå­—èŠ‚éƒ½ä¸º0
+  icmphdr = (struct icmp_echo_hdr *)q->payload;//Ö¸Ïò²î´í±¨ÎÄÊ×²¿
+  icmphdr->type = type;//ÌîÐ´ÀàÐÍ×Ö¶Î
+  icmphdr->code = code;//ÌîÐ´´úÂë×Ö¶Î
+  icmphdr->id = 0;//¶ÔÓÚÄ¿µÄ²»¿É´ïºÍÊý¾Ý±¨³¬Ê±
+  icmphdr->seqno = 0;//±¨ÎÄ£¬Ê×²¿Ê£ÓàµÄ4¸ö×Ö½Ú¶¼Îª0
 
-  /* copy fields from original packet å°†å¼•èµ·å·®é”™çš„IPæ•°æ®æŠ¥çš„IPé¦–éƒ¨+8å­—èŠ‚æ•°æ®æ‹·è´åˆ°å·®é”™æŠ¥æ–‡æ•°æ®åŒº*/
+  /* copy fields from original packet ½«ÒýÆð²î´íµÄIPÊý¾Ý±¨µÄIPÊ×²¿+8×Ö½ÚÊý¾Ý¿½±´µ½²î´í±¨ÎÄÊý¾ÝÇø*/
   SMEMCPY((u8_t *)q->payload + sizeof(struct icmp_echo_hdr), (u8_t *)p->payload,
           IP_HLEN + ICMP_DEST_UNREACH_DATASIZE);
 
   /* calculate checksum */
-  icmphdr->chksum = 0;//æŠ¥æ–‡æ ¡éªŒå’Œå­—æ®µæ¸…0
-  icmphdr->chksum = inet_chksum(icmphdr, q->len);//è®¡ç®—å¡«å†™æ ¡éªŒå’Œ
+  icmphdr->chksum = 0;//±¨ÎÄÐ£ÑéºÍ×Ö¶ÎÇå0
+  icmphdr->chksum = inet_chksum(icmphdr, q->len);//¼ÆËãÌîÐ´Ð£ÑéºÍ
   ICMP_STATS_INC(icmp.xmit);
   /* increase number of messages attempted to send */
   snmp_inc_icmpoutmsgs();
   /* increase number of destination unreachable messages attempted to send */
   snmp_inc_icmpouttimeexcds();
   ip_addr_copy(iphdr_src, iphdr->src);
-  ip_output(q, NULL, &iphdr_src, ICMP_TTL, 0, IP_PROTO_ICMP);//è°ƒç”¨IPå±‚å‡½æ•°è¾“å‡ºICMPæŠ¥æ–‡
+  ip_output(q, NULL, &iphdr_src, ICMP_TTL, 0, IP_PROTO_ICMP);//µ÷ÓÃIP²ãº¯ÊýÊä³öICMP±¨ÎÄ
   pbuf_free(q);
 }
 
